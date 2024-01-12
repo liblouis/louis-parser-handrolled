@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use trie::Trie;
 
 use crate::parser::{dots_to_unicode, Braille, Direction, Rule};
@@ -23,6 +25,44 @@ impl<'a> From<&'a Translation> for TranslationMapping<'a> {
             input: &translation.from,
             output: &translation.to,
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct DisplayTable {
+    dots_to_char: HashMap<char, char>,
+    direction: Direction,
+}
+
+impl DisplayTable {
+    pub fn compile(rules: &Vec<Rule>, direction: Direction) -> Self {
+        let mut dots_to_char = HashMap::new();
+        let rules: Vec<_> = rules.iter().filter(|r| r.is_direction(direction)).collect();
+
+        for rule in rules {
+            if let Rule::Display {
+                character, dots, ..
+            } = rule
+            {
+                dots_to_char.insert(dots_to_unicode(&dots).chars().nth(0).unwrap(), *character);
+            }
+        }
+        DisplayTable {
+            dots_to_char,
+            direction,
+        }
+    }
+
+    /// Map the `input` to the output using the display rules in the
+    /// `DisplayTable`.
+    ///
+    /// If the `DisplayTable` does not contain a mapping for a
+    /// specific char then the original character is returned
+    pub fn translate(&self, input: &str) -> String {
+        input
+            .chars()
+            .map(|c| *self.dots_to_char.get(&c).unwrap_or(&c))
+            .collect()
     }
 }
 
