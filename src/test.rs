@@ -78,7 +78,7 @@ impl<'a> TestMatrix<'a> {
         for path in &self.paths {
             for direction in self.directions {
                 let rules = parser::table_expanded(path.as_path())?;
-                let table = TranslationTable::compile(rules, *direction);
+                let table = TranslationTable::compile(&rules, *direction);
                 for test in self.tests {
                     results.push(test.check(&table, *direction));
                 }

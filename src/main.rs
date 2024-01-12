@@ -83,7 +83,7 @@ fn translate(table: &Path, direction: Direction, input: &str) {
     let rules = parser::table(table);
     match rules {
         Ok(rules) => {
-            let table = TranslationTable::compile(rules, direction);
+            let table = TranslationTable::compile(&rules, direction);
             println!("{}", table.translate(input));
         }
         Err(errors) => {
@@ -146,7 +146,7 @@ fn main() {
                 let rules = parser::table(&table);
                 match rules {
                     Ok(rules) => {
-                        let table = TranslationTable::compile(rules, direction);
+                        let table = TranslationTable::compile(&rules, direction);
                         repl(Box::new(move |input| {
                             println!("{}", table.translate(&input))
                         }));

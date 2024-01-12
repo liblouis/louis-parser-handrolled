@@ -74,14 +74,11 @@ pub struct TranslationTable {
 }
 
 impl TranslationTable {
-    pub fn compile(rules: Vec<Rule>, direction: Direction) -> Self {
+    pub fn compile(rules: &Vec<Rule>, direction: Direction) -> Self {
         let mut undefined = None;
         let mut trie = Trie::new();
 
-        let rules: Vec<Rule> = rules
-            .into_iter()
-            .filter(|r| r.is_direction(direction))
-            .collect();
+        let rules: Vec<_> = rules.iter().filter(|r| r.is_direction(direction)).collect();
 
         for rule in rules {
             match rule {
@@ -208,7 +205,7 @@ mod tests {
             RuleParser::new("always bar 456").rule().unwrap(),
             RuleParser::new("space \\s 0").rule().unwrap(),
         ];
-        let table = TranslationTable::compile(rules, Direction::Forward);
+        let table = TranslationTable::compile(&rules, Direction::Forward);
         assert_eq!(table.translate("foobar"), "⠇⠸");
         assert_eq!(table.translate("  "), "⠀⠀");
         assert_eq!(table.translate("🐂"), "?");
