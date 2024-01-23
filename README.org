@@ -1,5 +1,8 @@
 #+title: liblouis re-implementation in Rust
 
+*Note:* The content of this repository has been merged with [[https://github.com/liblouis/louis-rs][louis-rs]]
+and will be maintained there from now on.
+
 This is the reduced-to-the-max re-write of liblouis in Rust.
 
 * Rationale
